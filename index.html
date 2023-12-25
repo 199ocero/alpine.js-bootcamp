@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+    <title>Alpine.js Bootcamp</title>
+</head>
+
+<body>
+    <div class="container mx-auto mt-8 max-w-2xl">
+        <h1 class="text-3xl font-bold mb-6">Alpine.js Bootcamp</h1>
+
+        <!-- x-data -->
+        <div x-data="{ open: false, search: '' }">
+
+            <!-- x-bind & x-on & x-text -->
+            <button x-bind:class="open ? 'bg-red-500' : 'bg-blue-500'" class="text-white px-4 py-2 rounded"
+                x-on:click="open = !open">
+                <span x-text="open ? 'Close' : 'Open'"></span>
+            </button>
+
+            <!-- x-show & x-cloak & x-transition -->
+            <div x-show="open" x-cloak x-transition>
+                <p class="bg-gray-300 p-4 my-6 rounded">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas necessitatibus quibusdam libero.
+                    Fugit cumque in sunt a odit exercitationem enim labore, commodi nisi sequi laudantium velit, beatae
+                    sint minus? Nulla.
+                </p>
+            </div>
+
+            <!-- x-if -->
+            <!-- does not support x-transition -->
+            <template x-if="open">
+                <p class="bg-gray-300 p-4 my-6 rounded">
+                    This is x-if example.
+                </p>
+            </template>
+
+            <!-- x-model -->
+            <div class="my-6">
+                <input x-model="search" type="text" class="border border-gray-300 px-4 py-2 rounded"
+                    placeholder="Search for...">
+                <p>You are searching: <span x-text="search"></span></p>
+            </div>
+
+            <!-- x-for -->
+            <div x-data="{ colors: [
+                { id: 1, name: 'Red' },
+                { id: 2, name: 'Green' },
+                { id: 3, name: 'Blue' },
+                { id: 4, name: 'Yellow' },
+                { id: 5, name: 'Purple' },
+                { id: 6, name: 'Teal' }
+            ] }">
+                <template x-for="(color, index) in colors" :key="color.id">
+                    <div class="flex items-center space-y-1 space-x-2">
+                        <div class="flex items-center space-x-2">
+                            <div x-bind:class="'bg-' + color.name.toLowerCase() + '-500'" class="w-4 h-4 rounded-full">
+                            </div>
+                            <span x-text="color.name"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Todo App -->
+            <div x-data="{ todos: [], userInput: '' }" class="my-6">
+                <div class="flex items-center space-x-4">
+                    <p>Todos: <span x-text="todos.length" class="font-bold"></span></p>
+                    <p>Ongoing Todos: <span x-text="todos.filter(todo => !todo.completed).length"
+                            class="font-bold"></span></p>
+                    <p>Completed Todos: <span x-text="todos.filter(todo => todo.completed).length"
+                            class="font-bold"></span></p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input x-model="userInput" type="text" class="border border-gray-300 px-4 py-2 rounded"
+                        placeholder="Add todo...">
+                    <button
+                        x-on:click="if (userInput.trim().length) todos.push({ name: userInput, completed: false }); userInput = ''"
+                        class="bg-blue-500 text-white px-4 py-2 rounded">Add Todo</button>
+                    <button x-show="todos.length" x-on:click="todos = []"
+                        class="bg-red-500 text-white px-4 py-2 rounded">Clear Todo</button>
+                </div>
+                <div class="mt-3">
+                    <template x-for="(todo, index) in todos.slice().reverse()">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" x-model="todo.completed" class="w-5 h-5 text-blue-600">
+                            <p class="text-md" x-bind:class="todo.completed ? 'line-through' : ''" x-text="todo.name">
+                            </p>
+                            <button x-on:click="todos = todos.filter((currentTodo) => currentTodo !== todo)"
+                                class="text-red-500">Delete</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
